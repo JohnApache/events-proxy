@@ -8,6 +8,12 @@
     - 兼容node端 浏览器端
 *****
 
+## 安装方法
+```javascript
+    npm install eventsproxy
+    const EventsProxy = require('eventsproxy');
+    const ep = new EventsProxy();
+```
 ## 测试用例测试结果
 
 ![mocha](./mocha.gif "测试结果")
@@ -32,7 +38,6 @@
 ### 合成事件绑定
 ```javascript
     // 传统模式
-    const events = new EventsProxy();
     fetch(url, options).then(function(response) { 
         {`... 复杂业务 ...`}
         fetch(url, options).then(function(response) { 
@@ -92,4 +97,30 @@
         }
     })
     expect(tmp).to.be.equal(0);
+```
+
+## API文档
+``` javascript
+    const EventsProxy = require('eventsproxy');
+    const ep = new EventsProxy();
+    // 注册事件
+    ep.register('Task', (data) => {
+
+    })
+    ep.register(['Task', 'Task1'], (data) => {
+
+    }) 
+    ep.register({
+        'Task': (data) => {},
+        'Task': (data) => {},
+    })
+    ep.setStart('Task1', () => {
+        // 总是在执行栈最前执行
+    })
+    ep.setFinished('Task1', () => {
+        // 总是在执行栈最后执行
+    })
+    ep.on(); ep.bind(); //绑定事件别名
+    // 触发事件
+    ep.emit('Task', data)；
 ```

@@ -175,6 +175,12 @@ class EventsProxy {
       this._listenAllSingleEvent(keys); // 对象多事件绑定
     } else {}
   }
+  on(keys, cb) {
+    this.register(keys, cb);
+  }
+  bind(keys, cb) {
+    this.register(keys, cb);
+  }
 }
 
 module.exports = EventsProxy;
