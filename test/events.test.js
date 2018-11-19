@@ -1,5 +1,5 @@
 const expect = require("chai").expect;
-const EventsProxy = require('./events')
+const EventsProxy = require('../src/events')
 describe('事件代理插件测试', function () {
     it('单事件绑定可以在异步环境触发', function (done) {
         const events = new EventsProxy();
