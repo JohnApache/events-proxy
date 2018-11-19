@@ -1,6 +1,6 @@
 {
   "name": "eventsproxy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "自定义事件代理插件",
   "main": "events.js",
   "scripts": {
