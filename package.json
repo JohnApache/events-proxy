@@ -1,0 +1,17 @@
+{
+  "name": "eventsproxy",
+  "version": "1.0.0",
+  "description": "自定义事件代理插件",
+  "main": "events.js",
+  "scripts": {
+    "test": "mocha -t 5000 events.test.js"
+  },
+  "keywords": [
+    "自定义事件代理",
+    "解除回调地狱问题",
+    "多异步串行执行",
+    "全局订阅模式"
+  ],
+  "author": "JohnApache",
+  "license": "ISC"
+}
