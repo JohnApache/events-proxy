@@ -41,6 +41,12 @@ class EventsProxy {
     }
     this._events_pool_[event].push(cb);
   }
+  _removeEvent(event, cb) {
+    if(this._events_pool_[event] && this.isAny(this._events_pool_[event], [])) {
+      let index = this._events_pool_[event].indexOf(cb);
+      this._events_pool_[event].splice(index, 1);
+    }
+  }
   // 初始化已执行任务栈
   _addExecs(key, execKey) {
     if (!this._execs_pool_[key]) {
@@ -120,6 +126,9 @@ class EventsProxy {
   _listenSingleEvent(key, cb) {
     this._addEvent(key, cb);
   }
+  _removeSingleEvent(key, cb) {
+    this._removeEvent(key, cb);
+  }
   // 注册合成事件
   _listenMultyEvents(events, cb) {
     let eventType = events.join("_");
@@ -180,6 +189,23 @@ class EventsProxy {
   }
   bind(keys, cb) {
     this.register(keys, cb);
+  }
+  /**
+   * 卸载事件
+   * @param {stirng | array | object} keys
+   * @param {function} fn
+   * @returns
+   * @memberof EventsProxy
+   */
+  unregister(keys, fn) {
+    if (!keys) return;
+    if (this.isAny(keys, "")) {
+      this._removeSingleEvent(keys, cb); //单事件绑定
+    } else if (this.isAny(keys, [])) {
+      this._removeMultyEvents(keys, cb); // 数组合成事件绑定
+    } else if (this.isAny(keys, {})) {
+      this._removeAllSingleEvent(keys); // 对象多事件绑定
+    } else {}
   }
 }
 
