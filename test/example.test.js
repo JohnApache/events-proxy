@@ -1,8 +1,8 @@
 const expect = require("chai").expect;
-const EventsProxy = require('../src/events')
+const createEventProxy = require('../src/events-proxy')
 describe('事件代理插件测试', function () {
     it('单事件绑定可以在异步环境触发', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp = 1;
@@ -15,7 +15,7 @@ describe('事件代理插件测试', function () {
         expect(tmp).to.be.equal(0);
     })
     it('单事件可以重复绑定多次，并执行每一次绑定的方法', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp = 1;
@@ -33,7 +33,7 @@ describe('事件代理插件测试', function () {
         expect(tmp).to.be.equal(0);
     })
     it('合成事件 事件数组 可以绑定', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp++;
@@ -51,7 +51,7 @@ describe('事件代理插件测试', function () {
     })
 
     it('相同合成事件 事件数组 可以多次绑定', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp++;
@@ -74,7 +74,7 @@ describe('事件代理插件测试', function () {
     })
 
     it('部分相同合成事件 事件数组 可以多次绑定', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp++;
@@ -98,7 +98,7 @@ describe('事件代理插件测试', function () {
         expect(tmp).to.be.equal(0);
     })
     it('合成事件和单事件相同 可以多次绑定', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp++;
@@ -129,7 +129,7 @@ describe('事件代理插件测试', function () {
     })
 
     it('对象批量事件绑定和其他单事件相同 可以多次绑定', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp++;
@@ -171,7 +171,7 @@ describe('事件代理插件测试', function () {
     })
 
     it('单事件绑定传递数据', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp++;
@@ -199,7 +199,7 @@ describe('事件代理插件测试', function () {
     })
 
     it('合成事件绑定传递数据', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp++;
@@ -222,7 +222,7 @@ describe('事件代理插件测试', function () {
 
 
     it('对象批量事件绑定传递数据', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp++;
@@ -252,7 +252,7 @@ describe('事件代理插件测试', function () {
     })
 
     it('混合对象数组单事件绑定传递数据', function (done) {
-        const events = new EventsProxy();
+        const events = createEventProxy();
         var tmp = 0;
         setTimeout(() => {
             tmp++;
