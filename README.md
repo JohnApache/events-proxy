@@ -85,7 +85,7 @@
         'Test2': (data) => {
             {`... 处理data ...`}
         },
-        'Test1_Test2': (data1, data2) => {
+        'Test1~Test2': (data1, data2) => {
             {`... 处理data ...`}
         }
     })
@@ -106,12 +106,12 @@
     ep.register({
         'Task1': (data) => {},
         'Task2': (data) => {},
-        'Task1_Task2': (v1, v2) => {
-            // 对象批量注册事件 对象事件注册复合事件key的分割线，默认是 ‘_’  
+        'Task1~Task2': (v1, v2) => {
+            // 对象批量注册事件 对象事件注册复合事件key的分割线，默认是 ‘~’  
         }
     })
-    // 设置对象事件注册复合事件key的分割线，默认是 ‘_’  该注册复合事件的方式只在对象注册事件有效
-    ep.setProxyLoopSplit('～');
+    // 设置对象事件注册复合事件key的分割线，默认是 ‘~’  该注册复合事件的方式只在对象注册事件有效
+    ep.setProxyLoopSplit('_');
     // 触发事件
     ep.emit('Task', data)；
 ```

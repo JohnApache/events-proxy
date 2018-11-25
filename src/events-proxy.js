@@ -4,7 +4,7 @@ const {isObject, isString} = require('./utlils');
 class EventsProxy {
     constructor() {
         this._proxy = createProxyPool();
-        this._proxy_loop_split = '_';
+        this._proxy_loop_split = '~';
     }
     _addProxys(event, callback) {
         event = [].concat(event);
