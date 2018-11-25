@@ -15,6 +15,13 @@ class StackPool {
             this.initStack(key);
         })
     }
+    queryStack(key) {
+        this.initStack(key);
+        return this._stack[key]
+    }
+    setStack(key, values) {
+        this._stack[key] = [].concat(values);
+    }
     pushStack(key, value) {
         this.initStack(key);
         return this._stack[key].push(value);
@@ -45,12 +52,13 @@ class StackPool {
         })
         return res;
     }
-    checkKey(key) {
-        return isArray(this._stack[key]) && (this._stack[key].length > 0);
+    checkKey(key, minLen = 1) {
+        minLen = minLen < 1 ? 1 : minLen;
+        return isArray(this._stack[key]) && (this._stack[key].length >= minLen);
     }
-    checkKeys(keys) {
+    checkKeys(keys, minLen) {
         keys = [].concat(keys);
-        return keys.every(key => this.checkKey(key));
+        return keys.every(key => this.checkKey(key, minLen));
     }
     forEachByKey(key, cb) {
         if(this.checkKey(key)) {

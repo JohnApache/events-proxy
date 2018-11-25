@@ -1,6 +1,7 @@
 const expect = require("chai").expect;
 const createProxyPool = require('../src/proxy');
 const createEvent = require('../src/event');
+const {PROXY_EVENT_KEY} = require('../src/definition');
 describe('事件代理池proxypool所有方法测试', function() {
     describe('事件代理池对象初始化测试', function() {
         it('事件createProxyPool测试', function() {
@@ -9,11 +10,45 @@ describe('事件代理池proxypool所有方法测试', function() {
         })
     })
 
-    describe('事件代理池initProxy测试', function() {
+    describe('事件代理池_initProxy测试', function() {
         it('事件代理池没有的proxy会初始化一个事件代理栈stackpool', function() {
             const pp = createProxyPool();
-            pp.initProxy('Test');
+            pp._initProxy('Test');
             expect(pp._pp['Test']._stack).to.be.deep.equal({})
+        })
+    })
+
+    describe('事件代理池beforeExecute afterExecute测试', function() {
+        it('事件代理池beforeExecute注册的方法 总会在注册执行栈之前', function() {
+            const pp = createProxyPool();
+            let tmp = '';
+            const ev = createEvent('Test', (data) => {
+                tmp += 1
+            });
+            const ev2 = createEvent('Test', (data) => {
+                tmp += 2
+            });
+            const ev3 = createEvent('Test', (data) => {
+                tmp += 3
+            });
+            const ev4 = createEvent(['Test', 'Test2'], (data) => {
+                tmp += 4
+            });
+            const ev5 = createEvent(['Test', 'Test2'], (data) => {
+                tmp += 5
+            });
+            const ev6 = createEvent(['Test', 'Test2'], (data) => {
+                tmp += 6
+            });
+            pp.beforeExecute('Test', ev);
+            pp.assignProxy('Test', ev2);
+            pp.afterExecute('Test', ev3);
+            pp.beforeExecute(['Test', 'Test2'], ev4);
+            pp.assignProxys(['Test', 'Test2'], ev5);
+            pp.afterExecute(['Test', 'Test2'], ev6);
+            pp.emitProxy('Test');
+            pp.emitProxy('Test2');
+            expect(tmp).to.be.equal('123456');
         })
     })
 
@@ -28,7 +63,7 @@ describe('事件代理池proxypool所有方法测试', function() {
             });
             pp.assignProxy('Test', ev);
             pp.assignProxy('Test', ev2);
-            expect(pp._pp['Test']._stack['__EVENT__']).to.be.deep.equal([ev, ev2])
+            expect(pp._pp['Test'].queryStack(PROXY_EVENT_KEY)).to.be.deep.equal([ev, ev2])
         })
     })
 
@@ -39,35 +74,48 @@ describe('事件代理池proxypool所有方法测试', function() {
                 console.log(data);
             });
             pp.assignProxys(['Test1', 'Test2'], ev)
-            expect(pp._pp['Test1']._stack['__EVENT__']).to.be.deep.equal([ev]);
-            expect(pp._pp['Test2']._stack['__EVENT__']).to.be.deep.equal([ev]);
+            expect(pp._pp['Test1'].queryStack(PROXY_EVENT_KEY)).to.be.deep.equal([ev]);
+            expect(pp._pp['Test2'].queryStack(PROXY_EVENT_KEY)).to.be.deep.equal([ev]);
         })
     })
 
-    describe('事件代理池assignProxy alias方法 register分配代理event测试', function() {
-        it('事件代理池没有的事件代理proxy会先初始化一个事件代理栈stackpool，再推栈对应的event', function() {
+    describe('事件代理池fireProxy解除绑定的单个event代理事件测试', function() {
+        it('解除绑定的同一个函数同一个事件名代理事件', function() {
+            let tmp = 0
+            const cb = () => { tmp ++;}
             const pp = createProxyPool();
-            const ev = createEvent('Test', (data) => {
-                console.log(data);
-            });
-            const ev2 = createEvent('Test', (data) => {
-                console.log(data);
-            });
-            pp.register('Test', ev);
-            pp.register('Test', ev2);
-            expect(pp._pp['Test']._stack['__EVENT__']).to.be.deep.equal([ev, ev2])
+            const ev = createEvent('Test', cb);
+            const ev2 = createEvent('Test', cb);
+            const ev3 = createEvent('Test2', cb);
+            pp.assignProxy('Test', ev2);
+            pp.assignProxy('Test2', ev3);
+            pp.emitProxy('Test');
+            pp.emitProxy('Test2');
+            expect(tmp).to.be.equal(2);
+            pp.fireProxy('Test', ev);
+            tmp = 0;
+            pp.emitProxy('Test');
+            pp.emitProxy('Test2');
+            expect(tmp).to.be.equal(1);
         })
     })
 
-    describe('事件代理池assignProxy alias registerAll方法分配代理复合事件event测试', function() {
-        it('事件代理池推复合事件event会分发至每个单事件，每个单事件绑定的又是同一个复合事件event', function() {
+    describe('事件代理池fireProxys解除绑定的复合事件event代理事件测试', function() {
+        it('解除绑定的同一个函数同一个事件名代理事件', function() {
+            let tmp = 0
+            const cb = () => { tmp ++;}
             const pp = createProxyPool();
-            const ev = createEvent(['Test1', 'Test2'], (data) => {
-                console.log(data);
-            });
-            pp.registerAll(['Test1', 'Test2'], ev)
-            expect(pp._pp['Test1']._stack['__EVENT__']).to.be.deep.equal([ev]);
-            expect(pp._pp['Test2']._stack['__EVENT__']).to.be.deep.equal([ev]);
+            const ev = createEvent(['Test1', 'Test2'], cb);
+            const ev2 = createEvent(['Test1', 'Test2'], cb);
+            pp.assignProxys(['Test1', 'Test2'], ev);
+            pp.emitProxy('Test1');
+            pp.emitProxy('Test2');
+            expect(tmp).to.be.equal(1);
+            pp.fireProxys(['Test1', 'Test2'], ev2);
+            tmp = 0;
+            pp.emitProxy('Test');
+            pp.emitProxy('Test2');
+            expect(tmp).to.be.equal(0);
         })
     })
 
@@ -84,7 +132,7 @@ describe('事件代理池proxypool所有方法测试', function() {
             const ev2 = createEvent('Test2', (data) => {
                 expect(data).to.be.equal(2);
             });
-            pp.registerAll(['Test1', 'Test2'], ev);
+            pp.assignProxys(['Test1', 'Test2'], ev);
             pp.emitProxy('Test1', 1);
             pp.emitProxy('Test2', 2);
         })

@@ -37,7 +37,24 @@ describe('栈池所有方法测试', function() {
         })
     })
     
-    
+    describe('栈池queryStack 查询某栈测试', function () {
+        it('已经初始化返回对应的值，未初始化的stack返回[]', function () {
+            const stack = createStackPool();
+            expect(stack.queryStack('Test')).to.be.deep.equal([]);
+            stack.pushStack('Test', 1);
+            expect(stack.queryStack('Test')).to.be.deep.equal([1]);
+        })
+    })
+
+    describe('栈池setStack 直接设置某栈测试', function () {
+        it('无论是否初始化直接设置栈池对应的key栈，丢弃之前的栈内容', function () {
+            const stack = createStackPool();
+            stack.pushStack('Test', 1);
+            expect(stack.queryStack('Test')).to.be.deep.equal([1]);
+            stack.setStack('Test', 2);
+            expect(stack.queryStack('Test')).to.be.deep.equal([2]);
+        })
+    })
     
     describe('栈池pushStack测试', function () {
         it('已经初始化的stack直接推栈', function () {
@@ -137,6 +154,14 @@ describe('栈池所有方法测试', function() {
             expect(stack.checkKey('Test1')).to.be.equal(false);
             expect(stack.checkKey('Test2')).to.be.equal(true);
             expect(stack.checkKey('Test3')).to.be.equal(false);
+        })
+        it('对于checkKey 第二个参数 minLen 是判断 栈的最小深度, minLen必须大于 1 否则 默认为 1', function () {
+            const stack = createStackPool();
+            stack.initStack('Test1');
+            stack.pushStack('Test2', 1);
+            expect(stack.checkKey('Test1')).to.be.equal(false);
+            expect(stack.checkKey('Test2')).to.be.equal(true);
+            expect(stack.checkKey('Test2', 2)).to.be.equal(false);
         })
     })
     
