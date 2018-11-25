@@ -4,13 +4,13 @@ const {isObject, isString} = require('./utlils');
 class EventsProxy {
     constructor() {
         this._proxy = createProxyPool();
-        this._proxy_loop_split = '_';
+        this._proxy_loop_split = '~';
     }
-    addProxys(event, callback) {
+    _addProxys(event, callback) {
         event = [].concat(event);
         this._proxy.assignProxys(event, createEvent(event, callback));
     }
-    addProxysLoop(events) {
+    _addProxysLoop(events) {
         for(let ev in events) {
             this.register(ev.split(this._proxy_loop_split), events[ev]);
         }
@@ -20,9 +20,9 @@ class EventsProxy {
     }
     register(event, callback) {
         if(isObject(event)) {
-            return this.addProxysLoop(event);
+            return this._addProxysLoop(event);
         }
-        this.addProxys(event, callback);
+        this._addProxys(event, callback);
     }
     emit(event, data) {
         if(isString(event)) {

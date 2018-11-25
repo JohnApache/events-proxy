@@ -11,8 +11,6 @@
 ## 安装方法
 ```javascript
     npm install eventsproxy
-    const EventsProxy = require('eventsproxy');
-    const ep = new EventsProxy();
 ```
 ## 测试用例测试结果
 
@@ -22,16 +20,15 @@
 
 ### 单事件绑定
 ```javascript
-    var tmp = 0;
-    setTimeout(() => {
-        tmp = 1;
-        events.emit('Test1');
-    }, 1000);
-    events.register('Test1', () => {
-        expect(tmp).to.be.equal(1);
-        done();
+    const createEventsProxy = require('eventsproxy');
+    const ep = createEventsProxy();
+    fetch(url, options).then(function(response) {
+        {`... 复杂业务 ...`}
+        ep.emit('Test1', response);
     })
-    expect(tmp).to.be.equal(0);
+    ep.register('Test1', (data) => {
+        {`... 处理data ...`}
+    })
 
 ```
 
@@ -50,77 +47,71 @@
     })
     
     // EventsProxy 模式
-    const events = new EventsProxy();
+    const createEventsProxy = require('eventsproxy');
+    const ep = createEventsProxy();
     fetch(url, options).then(function(response) {
         {`... 复杂业务 ...`}
-        events.emit('Task1', data);
+        ep.emit('Task1', data);
     })
     fetch(url, options).then(function(response) {
         {`... 复杂业务 ...`}
-        events.emit('Task2', data);
+        ep.emit('Task2', data);
     })
     fetch(url, options).then(function(response) {
         {`... 复杂业务 ...`}
-        events.emit('Task3', data);
+        ep.emit('Task3', data);
     })
-    events.register(['Task1', 'Task1', 'Task3'], (...data) => {
-        console.log('finshied', ...data);
+    ep.register(['Task1', 'Task1', 'Task3'], (data1, data2, data3) => {
+        console.log('finshied', data1, data2, data3);
     })
 ```
 
-### 多事件绑定
+### 多事件绑定 
 ```javascript
-    const events = new EventsProxy();
-    var tmp = 0;
-    setTimeout(() => {
-        tmp++;
-        events.emit('Test1');
-        setTimeout(() => {
-            tmp++
-            events.emit('Test2');
-            setTimeout(() => {
-                tmp++
-                events.emit('Test3');
-                done();
-            }, 1000)
-        }, 1000)
-    }, 1000);
-    events.register({
-        'Test1': () => {
-            expect(tmp).to.be.equal(1);
+    const createEventsProxy = require('eventsproxy');
+    const ep = createEventsProxy();
+    fetch(url, options).then(function(response) {
+        {`... 复杂业务 ...`}
+        ep.emit('Test1', data);
+    })
+    fetch(url, options).then(function(response) {
+        {`... 复杂业务 ...`}
+        ep.emit('Test2', data);
+    })
+    ep.register({
+        'Test1': (data) => {
+            {`... 处理data ...`}
         },
-        'Test2': () => {
-            expect(tmp).to.be.equal(2);
+        'Test2': (data) => {
+            {`... 处理data ...`}
         },
-        'Test3': () => {
-            expect(tmp).to.be.equal(3);
+        'Test1~Test2': (data1, data2) => {
+            {`... 处理data ...`}
         }
     })
-    expect(tmp).to.be.equal(0);
 ```
 
 ## API文档
 ``` javascript
-    const EventsProxy = require('eventsproxy');
-    const ep = new EventsProxy();
-    // 注册事件
+    // 引入方式
+    const createEventsProxy = require('eventsproxy');
+    const ep = createEventsProxy();
+    // 注册事件 三种方式
     ep.register('Task', (data) => {
-
+        // 字符串单事件注册
     })
-    ep.register(['Task', 'Task1'], (data) => {
-
+    ep.register(['Task1', 'Task2'], (v1, v2) => {
+        // 数组复合事件 回调函数 参数 v1 v2分别是自Task1 Task2传递来的data
     }) 
     ep.register({
-        'Task': (data) => {},
-        'Task': (data) => {},
+        'Task1': (data) => {},
+        'Task2': (data) => {},
+        'Task1~Task2': (v1, v2) => {
+            // 对象批量注册事件 对象事件注册复合事件key的分割线，默认是 ‘~’  
+        }
     })
-    ep.setStart('Task1', () => {
-        // 总是在执行栈最前执行
-    })
-    ep.setFinished('Task1', () => {
-        // 总是在执行栈最后执行
-    })
-    ep.on(); ep.bind(); //绑定事件别名
+    // 设置对象事件注册复合事件key的分割线，默认是 ‘~’  该注册复合事件的方式只在对象注册事件有效
+    ep.setProxyLoopSplit('_');
     // 触发事件
     ep.emit('Task', data)；
 ```
