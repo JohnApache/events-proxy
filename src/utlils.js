@@ -14,9 +14,14 @@ const isFunction = (value) => {
     return Object.prototype.toString.call(value) === '[object Function]';
 }
 
+const isInt = (value) => {
+    return typeof value === 'number';
+}
+
 module.exports = {
     isArray,
     isObject,
     isString,
-    isFunction
+    isFunction,
+    isInt
 }
