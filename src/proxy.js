@@ -1,5 +1,4 @@
 const createStackPool = require('./stack');
-const {isObject} = require('./utlils');
 const {PROXY_EVENT_KEY, PROXY_EVENT_BEFORE_EXECUTE, PROXY_EVENT_AFTER_EXECUTE} = require('./definition');
 class ProxyPool {
     constructor() {

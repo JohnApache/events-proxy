@@ -98,6 +98,24 @@ describe('事件代理池proxypool所有方法测试', function() {
             pp.emitProxy('Test2');
             expect(tmp).to.be.equal(1);
         })
+        it('没有指定解除事件代理proxy或者没有指定event都是无效的', function() {
+            let tmp = 0;
+            const cb = () => { tmp ++;}
+            const pp = createProxyPool();
+            const ev = createEvent('Test', cb);
+            pp.assignProxy('Test', ev);
+            pp.emitProxy('Test');
+            expect(tmp).to.be.equal(1);
+            pp.fireProxy('Test');
+            pp.emitProxy('Test');
+            expect(tmp).to.be.equal(2);
+            pp.fireProxy('', ev);
+            pp.emitProxy('Test');
+            expect(tmp).to.be.equal(3);
+            pp.fireProxy('Test', ev);
+            pp.emitProxy('Test');
+            expect(tmp).to.be.equal(3);
+        })
     })
 
     describe('事件代理池fireProxys解除绑定的复合事件event代理事件测试', function() {
