@@ -1,5 +1,6 @@
 # Javascript 自定义事件代理插件
 [![Build Status](https://www.travis-ci.org/JohnApache/events-proxy.svg?branch=master)](https://www.travis-ci.org/JohnApache/events-proxy)
+[![codecov](https://codecov.io/gh/JohnApache/events-proxy/branch/master/graph/badge.svg)](https://codecov.io/gh/JohnApache/events-proxy)
 *****
 + 插件主要特点：
     - 深层嵌套回调函数，以事件模式完全解除了嵌套的问题, 解耦复杂业务逻辑
