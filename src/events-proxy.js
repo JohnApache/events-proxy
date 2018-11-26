@@ -1,7 +1,7 @@
 const createProxyPool = require('./proxy');
 const createEvent = require('./event');
 const {PROXY_LOOP_SPLIT} = require('./definition');
-const {isObject, isString, isInt} = require('./utlils')
+const {isObject, isString, isInt} = require('./utils');
 class EventsProxy {
     constructor() {
         this._proxy = createProxyPool();

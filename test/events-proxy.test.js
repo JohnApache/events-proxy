@@ -190,9 +190,15 @@ describe('事件代理EventsProxy对外方法测试', function() {
             ep.before(['Test1', 'Test2'], () => {
                 tmp += 5;
             })
+            ep.before({
+                'Test3': (v) => {
+                    tmp += 'HelloWolrd';
+                }
+            })
             ep.emit('Test1', 1);
             ep.emit('Test2', 2);
-            expect(tmp).to.be.equal('123456789');
+            ep.emit('Test3', 3);
+            expect(tmp).to.be.equal('123456789HelloWolrd');
         }) 
     })
     describe('事件代理once注册事件代理测试', function() {
@@ -339,6 +345,45 @@ describe('事件代理EventsProxy对外方法测试', function() {
             ep.emit('Test1', 3);
             expect(tmp).to.be.deep.equal(0);
         }) 
+        it('wait注册事件event是object类型的时候，callback可以被舍去优先被设置为waitcount，即使传递了callback也会舍去，此时采用常规的waitcount', function () {
+            let tmp = 0;
+            const ep = createEventsProxy();
+            ep.wait({
+                'Test1': () => {
+                    tmp++;
+                },
+                'Test1,Test2': () => {
+                    tmp++;
+                }
+            }, null, 2)
+            ep.emit('Test1', 1);
+            expect(tmp).to.be.deep.equal(0);
+            ep.emit('Test1', 1);
+            expect(tmp).to.be.deep.equal(1);
+            ep.emit('Test2', 1);
+            expect(tmp).to.be.deep.equal(1);
+            ep.emit('Test2', 1);
+            expect(tmp).to.be.deep.equal(2);
+            
+            tmp = 0;
+            const ep2 = createEventsProxy();
+            ep2.wait({
+                'Test1': () => {
+                    tmp++;
+                },
+                'Test1,Test2': () => {
+                    tmp++;
+                }
+            }, 2)
+            ep2.emit('Test1', 1);
+            expect(tmp).to.be.deep.equal(0);
+            ep2.emit('Test1', 1);
+            expect(tmp).to.be.deep.equal(1);
+            ep2.emit('Test2', 1);
+            expect(tmp).to.be.deep.equal(1);
+            ep2.emit('Test2', 1);
+            expect(tmp).to.be.deep.equal(2);
+        }) 
     })
     describe('bindNTimes绑定指定触发次数的事件方式', function() {
         it('bindNTimes绑定指定触发次数的事件方式,达到指定次数即卸载, 指定次数times 默认为1', function() {
@@ -393,7 +438,35 @@ describe('事件代理EventsProxy对外方法测试', function() {
                 'Test1,Test2': () => {
                     tmp++;
                 }
-            }, 2)
+            }, 2);
+            ep.emit('Test1');
+            expect(tmp).to.be.equal(1);
+            ep.emit('Test2');
+            expect(tmp).to.be.equal(3);
+            ep.emit('Test1');
+            expect(tmp).to.be.equal(4);
+            ep.emit('Test2');
+            expect(tmp).to.be.equal(6);
+            ep.emit('Test1');
+            expect(tmp).to.be.equal(6);
+            ep.emit('Test2');
+            expect(tmp).to.be.equal(6);
+        })
+
+        it('bindNTimes绑定指定触发次数的事件方式,达到指定次数即卸载,event也支持object, 当event为object时 callback 不省略 第二个参数是设置为null', function() {
+            const ep = createEventsProxy();
+            let tmp = 0;
+            ep.bindNTimes({
+                'Test1': () => {
+                    tmp++;
+                },
+                'Test2': () => {
+                    tmp++;
+                },
+                'Test1,Test2': () => {
+                    tmp++;
+                }
+            }, null, 2);
             ep.emit('Test1');
             expect(tmp).to.be.equal(1);
             ep.emit('Test2');
@@ -408,7 +481,7 @@ describe('事件代理EventsProxy对外方法测试', function() {
             expect(tmp).to.be.equal(6);
         })
     })
-    describe('事件代理unregister alias 方法 unbind unsubscribe off解除事件代理测试', function() {
+    describe('事件代理unregister 和alias 方法 unbind unsubscribe off解除事件代理测试', function() {
         it('事件代理unregister解除事件代理支持单事件复合事件以及对象批量事件', function () {
             const ep = createEventsProxy();
             let tmp = 0;
@@ -433,7 +506,7 @@ describe('事件代理EventsProxy对外方法测试', function() {
             ep.emit('Test2', 2);
             expect(tmp).to.be.equal(2);
             tmp = 0;
-            ep.unsubscribe('Test2', subscribeConfig.Test2);
+            ep.unbind('Test2', subscribeConfig.Test2);
             ep.emit('Test1', 1);
             ep.emit('Test2', 2);
             expect(tmp).to.be.equal(1);
@@ -442,6 +515,32 @@ describe('事件代理EventsProxy对外方法测试', function() {
             ep.emit('Test1', 1);
             ep.emit('Test2', 2);
             expect(tmp).to.be.equal(0);
+        }) 
+
+        it('事件代理unregister解除对象批量事件', function () {
+            const ep = createEventsProxy();
+            let tmp = 0;
+            let subscribeConfig = {
+                'Test1': () => {
+                    tmp++;
+                },
+                'Test2': () => {
+                    tmp++;
+                },
+                'Test1,Test2': () => {
+                    tmp++;
+                }
+            }
+            ep.on(subscribeConfig)
+            ep.emit('Test1', 1);
+            expect(tmp).to.be.equal(1);
+            ep.emit('Test2', 2);
+            expect(tmp).to.be.equal(3);
+            ep.off(subscribeConfig);
+            ep.emit('Test1', 3);
+            expect(tmp).to.be.equal(3);
+            ep.emit('Test2', 3);
+            expect(tmp).to.be.equal(3);
         }) 
     })
     describe('事件代理emit触发代理事件测试', function() {
@@ -469,5 +568,9 @@ describe('事件代理EventsProxy对外方法测试', function() {
             ep.emit('Test1', 1);
             ep.emit('Test2', 2);
         }) 
+        it('emit触发不合法的event不会生效', function() {
+            const ep = createEventsProxy();
+            ep.emit(2, 3);
+        })
     })
 })
