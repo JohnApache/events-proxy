@@ -227,6 +227,17 @@ describe('事件代理EventsProxy对外方法测试', function() {
             ep.emit('Test2', 2);
             expect(tmp).to.be.equal(4);
         }) 
+
+        it('once注册事件返回值也是一个卸载函数， 可以立即中断卸载事件', function () {
+            const ep = createEventsProxy();
+            let tmp = 0;
+            const unregister = ep.once('Test1', () => {
+                tmp ++;
+            })
+            unregister();
+            ep.emit('Test1');
+            expect(tmp).to.be.equal(0);
+        }) 
     })
 
     describe('事件代理wait注册事件代理测试', function() {
@@ -261,7 +272,28 @@ describe('事件代理EventsProxy对外方法测试', function() {
             expect(tmp).to.be.deep.equal(0);
             ep.emit('Test1', 3);ep.emit('Test2', 3);
             expect(tmp).to.be.deep.equal(1);
+        })
+        
+        it('wait注册事件效果每隔waitcount触发事件次才会触发一次回调', function () {
+            const ep = createEventsProxy();
+            let tmp = 0;
+            ep.wait(['Test1', 'Test2'], (v1, v2, v3) => {
+                tmp++;
+            }, 3);
+            ep.emit('Test1', 1);ep.emit('Test2', 1);
+            expect(tmp).to.be.deep.equal(0);
+            ep.emit('Test1', 2);ep.emit('Test2', 2);
+            expect(tmp).to.be.deep.equal(0);
+            ep.emit('Test1', 3);ep.emit('Test2', 3);
+            expect(tmp).to.be.deep.equal(1);
+            ep.emit('Test1', 1);ep.emit('Test2', 1);
+            expect(tmp).to.be.deep.equal(1);
+            ep.emit('Test1', 2);ep.emit('Test2', 2);
+            expect(tmp).to.be.deep.equal(1);
+            ep.emit('Test1', 3);ep.emit('Test2', 3);
+            expect(tmp).to.be.deep.equal(2);
         }) 
+
         it('wait注册事件效果和register一样但是触发需要根据深度的变化而变化, 参数支持 object 批量绑定事件，且每个事件的等待深度一致', function () {
             const ep = createEventsProxy();
             let tmp = 0;
@@ -289,8 +321,93 @@ describe('事件代理EventsProxy对外方法测试', function() {
             ep.emit('Test1', 3);ep.emit('Test2', 6);
             expect(tmp).to.be.deep.equal(3);
         }) 
-    })
 
+        it('wait注册事件效果和register一样返回值是一个卸载函数', function () {
+            const ep = createEventsProxy();
+            let tmp = 0;
+            const unregister = ep.wait('Test1', (v1, v2, v3) => {
+                tmp++;
+                expect(v1).to.be.deep.equal([1]);
+                expect(v2).to.be.deep.equal([2]);
+                expect(v3).to.be.deep.equal([3]);
+            }, 3);
+            ep.emit('Test1', 1);
+            expect(tmp).to.be.deep.equal(0);
+            ep.emit('Test1', 2);
+            expect(tmp).to.be.deep.equal(0);
+            unregister();
+            ep.emit('Test1', 3);
+            expect(tmp).to.be.deep.equal(0);
+        }) 
+    })
+    describe('bindNTimes绑定指定触发次数的事件方式', function() {
+        it('bindNTimes绑定指定触发次数的事件方式,达到指定次数即卸载, 指定次数times 默认为1', function() {
+            const ep = createEventsProxy();
+            let tmp = 0;
+            ep.bindNTimes('Test1', () => {
+                tmp++;
+            });
+            ep.done('Test1');
+            expect(tmp).to.be.equal(1);
+            ep.done('Test1');
+            expect(tmp).to.be.equal(1);
+        })
+        it('bindNTimes绑定指定触发次数的事件方式,达到指定次数即卸载, 设置指定次数times times 小于1 无效', function() {
+            const ep = createEventsProxy();
+            let tmp = 0;
+            ep.bindNTimes('Test1', () => {
+                tmp++;
+            }, 3);
+            ep.done('Test1');
+            expect(tmp).to.be.equal(1);
+            ep.done('Test1');
+            expect(tmp).to.be.equal(2);
+            ep.done('Test1');
+            expect(tmp).to.be.equal(3);
+            ep.done('Test4');
+            expect(tmp).to.be.equal(3);
+        })
+        it('bindNTimes绑定指定触发次数的事件方式,达到指定次数即卸载,event也支持array', function() {
+            const ep = createEventsProxy();
+            let tmp = 0;
+            ep.bindNTimes(['Test1', 'Test2'], () => {
+                tmp++;
+            }, 2);
+            ep.emit('Test1');ep.emit('Test2');
+            expect(tmp).to.be.equal(1);
+            ep.emit('Test1');ep.emit('Test2');
+            expect(tmp).to.be.equal(2);
+            ep.emit('Test1');ep.emit('Test2');
+            expect(tmp).to.be.equal(2);
+        })
+        it('bindNTimes绑定指定触发次数的事件方式,达到指定次数即卸载,event也支持object, 当event为object时 callback 可以省略 第二个参数是times', function() {
+            const ep = createEventsProxy();
+            let tmp = 0;
+            ep.bindNTimes({
+                'Test1': () => {
+                    tmp++;
+                },
+                'Test2': () => {
+                    tmp++;
+                },
+                'Test1,Test2': () => {
+                    tmp++;
+                }
+            }, 2)
+            ep.emit('Test1');
+            expect(tmp).to.be.equal(1);
+            ep.emit('Test2');
+            expect(tmp).to.be.equal(3);
+            ep.emit('Test1');
+            expect(tmp).to.be.equal(4);
+            ep.emit('Test2');
+            expect(tmp).to.be.equal(6);
+            ep.emit('Test1');
+            expect(tmp).to.be.equal(6);
+            ep.emit('Test2');
+            expect(tmp).to.be.equal(6);
+        })
+    })
     describe('事件代理unregister alias 方法 unbind unsubscribe off解除事件代理测试', function() {
         it('事件代理unregister解除事件代理支持单事件复合事件以及对象批量事件', function () {
             const ep = createEventsProxy();

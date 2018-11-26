@@ -114,7 +114,7 @@
         {`... 先执行的业务 ... `}
     })
 ```
-### before只监视一次的绑定方式
+### once只监视一次的绑定方式
 ```javascript
     const createEventsProxy = require('eventsproxy');
     const ep = createEventsProxy();
@@ -178,6 +178,7 @@
 
     const unregister = ep.register(['Test1', 'Test2'], fn); //register的返回值也返回了卸载函数
     unregister(); // 也可以取消解绑事件
+    /* ⚠️ ： 当event为对象模式  批量绑定 因为存在无限递归情况 不返回卸载函数  卸载需要通过 ep.unregister ep.unbind 等主动卸载方式卸载 */
 ```
 
 

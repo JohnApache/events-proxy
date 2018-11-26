@@ -16,13 +16,13 @@ class EventsProxy {
             this.register(ev.split(this._proxy_loop_split), events[ev]);
         }
     }
-    _removeProxys(event, callback) {
+    _removeProxys(event, callback, waitCount = 1) {
         event = [].concat(event);
-        this._proxy.fireProxys(event, createEvent(event, callback));
+        this._proxy.fireProxys(event, createEvent(event, callback, waitCount));
     }
-    _removeProxysLoops(events) {
+    _removeProxysLoops(events, waitCount) {
         for(let ev in events) {
-            this.unregister(ev.split(this._proxy_loop_split), events[ev]);
+            this.unregister(ev.split(this._proxy_loop_split), events[ev], waitCount);
         }
     }
     _beforeLoops(event) {
@@ -40,9 +40,14 @@ class EventsProxy {
             this.once(ev.split(this._proxy_loop_split), event[ev])
         }
     }
-    _waitLoops(event, waitCount) {
+    _waitLoops(event, waitCount = 1) {
         for(let ev in event) {
             this.wait(ev.split(this._proxy_loop_split), event[ev], waitCount)
+        }
+    }
+    _bindNTimesLoops(event, times = 1) {
+        for(let ev in event) {
+            this.bindNTimes(ev.split(this._proxy_loop_split), event[ev], times)
         }
     }
     /**
@@ -117,7 +122,37 @@ class EventsProxy {
             callback && callback(...data);
             unregister && unregister();
         });
+        return unregister; //可以随时提前中断
     }
+
+    
+    /**
+     * 绑定指定次数的事件 达到指定次数即卸载
+     * @param {string|array|object} event
+     * @param {function} callback
+     * @param {callback} times
+     * @returns
+     * @memberof EventsProxy
+     */
+    bindNTimes(event, callback, times = 1) {
+        if(isObject(event)) {
+            if(isInt(callback)) {
+                return this._bindNTimesLoops(event, callback);
+            }else {
+                return this._bindNTimesLoops(event, times);
+            }
+        }
+        times = times < 1 ? 1 : times;
+        const unregister = this.register(event, (...data) => {
+            callback && callback(...data);
+            times--;
+            if(times === 0) {
+                unregister && unregister();
+            }
+        });
+        return unregister; //可以随时提前中断
+    }
+    
     
     /**
      * 事件触发 waitCount 次数 后 执行
@@ -135,18 +170,20 @@ class EventsProxy {
             }
         }
         this._addProxys(event, callback, waitCount);
+        return this.unregister.bind(this, event, callback, waitCount);
     }
     
     /**
      * 解除绑定事件
      * @param {string|array|object} event string 单事件 array 复合事件 object 批量事件
      * @param {function} callback 
+     * @param {int} waitCount 等待深度 默认为1层 
      */
-    unregister(event, callback) { 
+    unregister(event, callback, waitCount) { 
         if(isObject(event)) {
-            return this._removeProxysLoops(event);
+            return this._removeProxysLoops(event, waitCount);
         }
-        this._removeProxys(event, callback)
+        this._removeProxys(event, callback, waitCount)
     }
     unsubscribe(event, callback) {
         this.unregister(event, callback);
