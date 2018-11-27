@@ -1,14 +1,15 @@
 {
   "name": "eventsproxy",
-  "version": "1.2.0",
-  "description": "自定义事件代理插件",
+  "version": "1.2.1",
+  "description": "自定义事件代理",
   "main": "index.js",
   "scripts": {
     "test": "nyc --reporter=text mocha -t 1000 'test/**/*.test.@(js|jsx)'",
-    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "build": "rollup -c"
   },
   "keywords": [
-    "自定义事件代理",
+    "轻量自定义事件代理插件",
     "解除回调地狱问题",
     "多异步串行执行",
     "全局订阅模式"
@@ -20,7 +21,15 @@
     "mocha": "^5.2.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
     "codecov": "^3.1.0",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "rollup": "^0.67.3",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-uglify": "^6.0.0"
   }
 }
