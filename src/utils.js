@@ -1,19 +1,27 @@
-export const isArray = (value) => {
+const isArray = (value) => {
     return Array.isArray(value);
 }
 
-export const isObject = (value) => {
+const isObject = (value) => {
     return Object.prototype.toString.call(value) === '[object Object]';
 }
 
-export const isString = (value) => {
+const isString = (value) => {
     return typeof value === 'string';
 }
 
-export const isFunction = (value) => {
+const isFunction = (value) => {
     return Object.prototype.toString.call(value) === '[object Function]';
 }
 
-export const isInt = (value) => {
+const isInt = (value) => {
     return typeof value === 'number';
+}
+
+module.exports = {
+    isArray,
+    isObject,
+    isString,
+    isFunction,
+    isInt
 }

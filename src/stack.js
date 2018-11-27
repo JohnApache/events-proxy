@@ -1,4 +1,4 @@
-import {isArray, isString} from './utils'
+const {isArray, isString} = require('./utils');
 class StackPool {
     constructor() {
         this._stack = {};
@@ -76,4 +76,4 @@ const createStackPool = () => {
     return new StackPool();
 }
 
-export default createStackPool;
+module.exports = createStackPool;

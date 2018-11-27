@@ -1,6 +1,6 @@
 const expect = require("chai").expect;
 const createEventsProxy = require('../src/events-proxy');
-const createProxyPool = require('../src/proxy')
+const createProxyPool = require('../src/proxy');
 
 describe('事件代理EventsProxy对外方法测试', function() {
     describe('事件代理EventsProxy初始化测试', function() {

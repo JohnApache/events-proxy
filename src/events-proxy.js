@@ -1,7 +1,7 @@
-import createProxyPool from './proxy';
-import createEvent from './event';
-import {PROXY_LOOP_SPLIT} from './definition';
-import {isObject, isString, isInt} from './utils';
+const createProxyPool = require('./proxy');
+const createEvent = require('./event');
+const {PROXY_LOOP_SPLIT} = require('./definition');
+const {isObject, isString, isInt} = require('./utils');
 class EventsProxy {
     constructor() {
         this._proxy = createProxyPool();
@@ -225,5 +225,4 @@ const createEventsProxy = (event, callback) => {
     return ep;
 }
 
-export default createEventsProxy;
-// module.exports = createEventsProxy;
+module.exports = createEventsProxy;

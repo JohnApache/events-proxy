@@ -1,4 +1,4 @@
-import createStackPool from './stack';
+const createStackPool = require('./stack')
 class _Event {
     constructor(event, callback, waitCount = 1) {
         this._ev = [].concat(event);
@@ -35,4 +35,4 @@ const createEvent = (event, callback, waitCount = 1) => {
     return new _Event(event, callback, Math.ceil(waitCount));
 }
 
-export default createEvent;
+module.exports = createEvent;
