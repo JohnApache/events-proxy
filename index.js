@@ -1,1 +1,1 @@
-module.exports = require('./src/events-proxy');
+module.exports = require('./dist/events-proxy');

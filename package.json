@@ -1,6 +1,6 @@
 {
   "name": "eventsproxy",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "自定义事件代理",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,8 @@
     "轻量自定义事件代理插件",
     "解除回调地狱问题",
     "多异步串行执行",
-    "全局订阅模式"
+    "全局订阅模式",
+    "UMD规范"
   ],
   "author": "JohnApache",
   "license": "ISC",
