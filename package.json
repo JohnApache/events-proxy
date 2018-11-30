@@ -6,8 +6,9 @@
   "scripts": {
     "test": "nyc --reporter=text mocha -t 1000 'test/**/*.test.@(js|jsx)'",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "build": "rollup -c",
-    "lint": "./node_modules/.bin/eslint ./ --fix"
+    "build": "npm run lint && rollup -c && npm run test",
+    "lint": "./node_modules/.bin/eslint ./ --fix",
+    "prepublish": "npm run build && npm run test"
   },
   "keywords": [
     "轻量自定义事件代理插件",

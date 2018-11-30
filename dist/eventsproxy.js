@@ -407,7 +407,7 @@
   var event = createEvent;
 
   var PROXY_LOOP_SPLIT = definition.PROXY_LOOP_SPLIT;
-  var isObject$2 = utils.isObject,
+  var isObject$1 = utils.isObject,
       isString$2 = utils.isString,
       isInt$1 = utils.isInt;
 
@@ -511,7 +511,7 @@
     }, {
       key: "before",
       value: function before(event$$1, callback) {
-        if (isObject$2(event$$1)) {
+        if (isObject$1(event$$1)) {
           return this._beforeLoops(event$$1);
         }
 
@@ -529,7 +529,7 @@
     }, {
       key: "after",
       value: function after(event$$1, callback) {
-        if (isObject$2(event$$1)) {
+        if (isObject$1(event$$1)) {
           return this._afterLoops(event$$1);
         }
 
@@ -546,7 +546,7 @@
     }, {
       key: "register",
       value: function register(event$$1, callback) {
-        if (isObject$2(event$$1)) {
+        if (isObject$1(event$$1)) {
           return this._addProxysLoops(event$$1);
         }
 
@@ -579,7 +579,7 @@
     }, {
       key: "once",
       value: function once(event$$1, callback) {
-        if (isObject$2(event$$1)) {
+        if (isObject$1(event$$1)) {
           return this._onceLoops(event$$1);
         }
 
@@ -603,12 +603,12 @@
       value: function bindNTimes(event$$1, callback) {
         var times = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
 
-        if (isObject$2(event$$1)) {
+        if (isObject$1(event$$1)) {
           if (isInt$1(callback)) {
             return this._bindNTimesLoops(event$$1, callback);
-          } else {
-            return this._bindNTimesLoops(event$$1, times);
           }
+
+          return this._bindNTimesLoops(event$$1, times);
         }
 
         times = times < 1 ? 1 : times;
@@ -633,12 +633,12 @@
     }, {
       key: "wait",
       value: function wait(event$$1, callback, waitCount) {
-        if (isObject$2(event$$1)) {
+        if (isObject$1(event$$1)) {
           if (isInt$1(callback)) {
             return this._waitLoops(event$$1, callback);
-          } else {
-            return this._waitLoops(event$$1, waitCount);
           }
+
+          return this._waitLoops(event$$1, waitCount);
         }
 
         this._addProxys(event$$1, callback, waitCount);
@@ -655,7 +655,7 @@
     }, {
       key: "unregister",
       value: function unregister(event$$1, callback, waitCount) {
-        if (isObject$2(event$$1)) {
+        if (isObject$1(event$$1)) {
           return this._removeProxysLoops(event$$1, waitCount);
         }
 

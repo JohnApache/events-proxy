@@ -7,7 +7,7 @@ install:
   - npm install
 #运行的脚本命令
 script:
-  - npm test
+  - npm build
 #上传覆盖率报告  
 after_success: npm run coverage  
 #指定分支，只有指定的分支提交时才会运行脚本
