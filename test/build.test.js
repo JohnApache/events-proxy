@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const {describe, it} = require('mocha');
-const createEventProxy = require('../src/events-proxy');
+const createEventProxy = require('../index.js');
 describe('rollup build 文件 事件代理插件测试', function () {
 	it('单事件绑定可以在异步环境触发', function (done) {
 		const events = createEventProxy();
