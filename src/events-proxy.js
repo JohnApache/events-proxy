@@ -216,6 +216,17 @@ class EventsProxy {
 	done(event, data) {
 		this.emit(event, data);
 	}
+
+	async(event) {
+		let success;
+		const prom = new Promise((resolve) => {
+			success = resolve;
+		});
+		this.once(event, (...data) => {
+			success(data);
+		});
+		return prom;
+	}
 }
 
 /**

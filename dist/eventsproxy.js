@@ -694,6 +694,22 @@
       value: function done(event$$1, data) {
         this.emit(event$$1, data);
       }
+    }, {
+      key: "async",
+      value: function async(event$$1) {
+        var success;
+        var prom = new Promise(function (resolve) {
+          success = resolve;
+        });
+        this.once(event$$1, function () {
+          for (var _len = arguments.length, data = new Array(_len), _key = 0; _key < _len; _key++) {
+            data[_key] = arguments[_key];
+          }
+
+          success(data);
+        });
+        return prom;
+      }
     }]);
 
     return EventsProxy;

@@ -97,6 +97,29 @@
     })
 ```
 
+### （* New Api）async 事件 监听， 支持 await then 等待返回结果， 返回结果是一次性的
+```javascript
+    const createEventsProxy = require('eventsproxy');
+    const ep = createEventsProxy();
+    fetch(url, options).then(function(response) {
+        {`... 复杂业务 ...`}
+        ep.emit('Test', 10)
+    });
+    const data1 = await ep.await('Test'); // 为了兼容合成事件 resolve返回值 为一个数组
+    console.log(data); // data = [ 10 ]
+    fetch(url, options).then(function(response) {
+        {`... 复杂业务 ...`}
+        ep.emit('Test1', 10)
+    });
+
+    fetch(url, options).then(function(response) {
+        {`... 复杂业务 ...`}
+        ep.emit('Test2', 20)
+    });
+    const data2 = await ep.await(['Test1', 'Test2']); // 为了兼容合成事件 resolve返回值 为一个数组
+    console.log(data); // data = [ 10, 20 ]
+```
+
 ### before绑定事件栈触发之前，该事件栈总是先于绑定该事件的方法之前执行 after绑定事件栈触发之后，该事件栈总是先于绑定该事件的方法之后执行
 ```javascript
     const createEventsProxy = require('eventsproxy');
@@ -230,6 +253,9 @@
             // 对象批量注册事件 对象事件注册复合事件key的分割线，默认是 ‘,’  
         }
     })
+    
+    ep.async('Test1') // 异步监听 事件
+    ep.async(['Test1', 'Test2']) // 异步监听 合成事件
 
     // 总是执行事件之前 以及 之后的钩子
     ep.before(['Test1', 'Test2'], () => {});
@@ -237,7 +263,7 @@
 
     // 触发次数执行
     ep.after(['Test1', 'Test2'], () => {}, 3 /* waitcount */); // 需要触发3次才会执行回调函数
-
+   
     // 触发事件
     ep.emit('Task', data);
     ep.done('Task', data); // emit alias

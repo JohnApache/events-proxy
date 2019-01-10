@@ -573,4 +573,27 @@ describe('事件代理EventsProxy对外方法测试', function() {
 			ep.emit(2, 3);
 		});
 	});
+
+	describe('事件代理async触发代理事件测试', function() {
+		it('await 可以得到async 结果', function (done) {
+			const ep = createEventsProxy();
+			ep.async('Test')
+				.then((data) => {
+					expect(data).to.be.deep.equal([10]);
+					done();
+				});
+			ep.emit('Test', 10);	
+		}); 
+
+		it('async 绑定 合成事件也可以 可以得到结果', function (done) {
+			const ep = createEventsProxy();
+			ep.async(['Test1', 'Test2'])
+				.then((data) => {
+					expect(data).to.be.deep.equal([10, 20]);
+					done();
+				});
+			ep.emit('Test1', 10);	
+			ep.emit('Test2', 20);
+		}); 
+	});
 });
