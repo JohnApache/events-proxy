@@ -663,18 +663,18 @@
       }
     }, {
       key: "unsubscribe",
-      value: function unsubscribe(event$$1, callback) {
-        this.unregister(event$$1, callback);
+      value: function unsubscribe(event$$1, callback, waitCount) {
+        this.unregister(event$$1, callback, waitCount);
       }
     }, {
       key: "unbind",
-      value: function unbind(event$$1, callback) {
-        this.unregister(event$$1, callback);
+      value: function unbind(event$$1, callback, waitCount) {
+        this.unregister(event$$1, callback, waitCount);
       }
     }, {
       key: "off",
-      value: function off(event$$1, callback) {
-        this.unregister(event$$1, callback);
+      value: function off(event$$1, callback, waitCount) {
+        this.unregister(event$$1, callback, waitCount);
       }
       /**
        * 主动触发事件

@@ -18,9 +18,6 @@
 ```javascript
     npm install eventsproxy
 ```
-## 测试用例测试结果
-
-![mocha](./mocha.gif "测试结果")
 
 ## 示例
 

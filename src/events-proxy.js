@@ -192,14 +192,14 @@ class EventsProxy {
 		}
 		this._removeProxys(event, callback, waitCount);
 	}
-	unsubscribe(event, callback) {
-		this.unregister(event, callback);
+	unsubscribe(event, callback, waitCount) {
+		this.unregister(event, callback, waitCount);
 	}
-	unbind(event, callback) {
-		this.unregister(event, callback);
+	unbind(event, callback, waitCount) {
+		this.unregister(event, callback, waitCount);
 	}
-	off(event, callback) {
-		this.unregister(event, callback);
+	off(event, callback, waitCount) {
+		this.unregister(event, callback, waitCount);
 	}
 
 	/**
