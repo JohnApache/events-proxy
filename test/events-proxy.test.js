@@ -115,6 +115,23 @@ describe('事件代理EventsProxy对外方法测试', function() {
 			ep.emit('Test1', 1);
 			ep.emit('Test2', 2);
 		}); 
+
+		it('事件代理register注册事件合成事件结果回调顺序', function (done) {
+			const ep = createEventsProxy();
+			ep.register(['Test1', 'Test2'], (v1, v2) => {
+				expect(v1).to.be.equal(1);
+				expect(v2).to.be.equal(2);
+			});
+
+			setTimeout(() => {
+				ep.emit('Test2', 2);
+				setTimeout(() => {
+					ep.emit('Test1', 1);
+					done();
+				}, 1000);
+			}, 1000);
+		}); 
+
 		it('事件代理register注册事件别名注册方式', function () {
 			const ep = createEventsProxy();
 			ep.bind('Test1', (v) => {
