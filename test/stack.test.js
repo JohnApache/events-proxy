@@ -1,6 +1,6 @@
-const expect = require('chai').expect;
-const {describe, it} = require('mocha');
-const createStackPool = require('../src/stack');
+import {expect} from 'chai';
+import createStackPool from '../src/stack';
+
 describe('栈池所有方法测试', function() {
 	describe('栈池initStack测试', function () {
 		it('initStack正常初始化', function () {

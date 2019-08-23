@@ -1,6 +1,6 @@
-const expect = require('chai').expect;
-const createEvent = require('../src/event');
-const {describe, it} = require('mocha');
+import {expect} from 'chai';
+import createEvent from '../src/event';
+
 describe('事件对象所有方法测试', function() {
 	describe('事件对象初始化测试', function() {
 		it('事件createEvent测试', function() {

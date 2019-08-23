@@ -1,6 +1,6 @@
-const expect = require('chai').expect;
-const createEventProxy = require('../src/events-proxy');
-const {describe, it} = require('mocha');
+import {expect} from 'chai';
+import createEventProxy from '../src/events-proxy';
+
 describe('事件代理插件测试', function () {
 	it('单事件绑定可以在异步环境触发', function (done) {
 		const events = createEventProxy();

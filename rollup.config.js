@@ -2,42 +2,54 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
-import {uglify} from 'rollup-plugin-uglify';
+import {terser} from 'rollup-plugin-terser';
+import path from 'path';
+import os from 'os';
 
-const dev = {
-	input: __dirname + '/src/events-proxy.js',
-	output: [{
-		file: 'eventsproxy.js',
+const cpuNums = os.cpus().length;
+const standard = {
+	input: path.resolve(__dirname, './src/events-proxy.js'),
+	output: {
+		file: path.resolve(__dirname, './dist/eventsproxy.js'),
 		format: 'umd',
-		dir: __dirname + '/dist',
-		name: 'eventsproxy'
-	}],
-	plugins: [
-		resolve(),
-		commonjs(),
-
-		babel({
-			exclude: 'node_modules/**' // 只编译我们的源代码
-		}),
-	]
-};
-
-const pro = {
-	input: __dirname + '/src/events-proxy.js',
-	output: [{
-		file: 'eventsproxy.min.js',
-		format: 'umd',
-		dir: __dirname + '/dist',
-		name: 'eventsproxy'
-	}],
+		name: 'eventsproxy',
+		extend: false,
+		sourcemap: false,
+	},
 	plugins: [
 		resolve(),
 		commonjs(),
 		babel({
-			exclude: 'node_modules/**' // 只编译我们的源代码
+			runtimeHelpers: true,
 		}),
-		uglify()
 	]
 };
 
-export default [dev, pro];
+const minSize = {
+	input: path.resolve(__dirname, './src/events-proxy.js'),
+	output: {
+		file: path.resolve(__dirname, './dist/eventsproxy.min.js'),
+		format: 'umd',
+		name: 'eventsproxy',
+		extend: false,
+		sourcemap: false,
+	},
+	plugins: [
+		resolve(),
+		commonjs(),
+		babel({
+			runtimeHelpers: true,
+		}),
+		terser({
+			output: {
+				comments: false
+			},
+			include: [/^.+\.js$/],
+			exclude: ['node_moudles/**'],
+			numWorkers: cpuNums,
+			sourcemap: false
+		})
+	]
+};
+
+export default [standard, minSize];

@@ -1,8 +1,9 @@
-const expect = require('chai').expect;
-const {describe, it} = require('mocha');
-const createProxyPool = require('../src/proxy');
-const createEvent = require('../src/event');
-const {PROXY_EVENT_KEY} = require('../src/definition');
+import {expect} from 'chai';
+import createProxyPool from '../src/proxy';
+import createEvent from '../src/event';
+import {PROXY_EVENT_KEY} from '../src/definition';
+
+
 describe('事件代理池proxypool所有方法测试', function() {
 	describe('事件代理池对象初始化测试', function() {
 		it('事件createProxyPool测试', function() {

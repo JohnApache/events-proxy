@@ -1,12 +1,12 @@
-const expect = require('chai').expect;
-const {describe, it} = require('mocha');
-const {
+import {expect} from 'chai';
+import {
 	isArray,
 	isObject,
 	isString,
 	isFunction,
 	isInt
-} = require('../src/utils');
+} from '../src/utils';
+
 const isEqual = (v1, v2, isDeep = false) => {
 	if(!isDeep) {
 		expect(v1).to.be.equal(v2);

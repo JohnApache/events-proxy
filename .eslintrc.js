@@ -13,12 +13,10 @@ module.exports = {
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
-    "plugins": [
-        "react"
-    ],
-    "parser": "babel-eslint",
     "globals": {
-        "__dirname": true
+        "__dirname": true,
+        "describe": true,
+        "it": true
     },
     "rules": {
         "indent": [

@@ -1,7 +1,7 @@
-const expect = require('chai').expect;
-const createEventsProxy = require('../src/events-proxy');
-const createProxyPool = require('../src/proxy');
-const {describe, it} = require('mocha');
+import {expect} from 'chai';
+import createProxyPool from '../src/proxy';
+import createEventsProxy from '../src/events-proxy';
+
 describe('事件代理EventsProxy对外方法测试', function() {
 	describe('事件代理EventsProxy初始化测试', function() {
 		it('初始化EventsProxy应该包含一个proxypool对象', function () {

@@ -1,9 +1,10 @@
-const createStackPool = require('./stack');
-const {
+import createStackPool from './stack';
+import {
 	PROXY_EVENT_KEY,
 	PROXY_EVENT_BEFORE_EXECUTE,
 	PROXY_EVENT_AFTER_EXECUTE
-} = require('./definition');
+} from './definition';
+
 class ProxyPool {
 	constructor() {
 		this._pp = {};
@@ -89,4 +90,4 @@ const createProxyPool = () => {
 	return new ProxyPool();
 };
 
-module.exports = createProxyPool;
+export default createProxyPool;
