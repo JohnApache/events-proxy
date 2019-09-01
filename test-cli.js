@@ -1,7 +1,7 @@
 <% if(author) { %>
-const ddd = <%= author %>;    
+const ddd = "<%= author %>";    
 <% } %>
 
 <% if(description) { %>
-const description = <%= description %>;
+const description = "<%= description %>";
 <% } %>
