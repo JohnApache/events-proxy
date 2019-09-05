@@ -69,13 +69,13 @@ module.exports = {
         const include = [];
         const exclude = [];
         
-        if(a.useEslint) {
+        if(useEslint) {
             include.push(new RegExp('eslintConfig'));
         }else {
             exclude.push(new RegExp('eslintConfig'));
         }
 
-        if(a.useTs) {
+        if(useTs) {
             include.push(new RegExp('tsconfig.js'));
         }else {
             exclude.push(new RegExp('tsconfig.js'));
