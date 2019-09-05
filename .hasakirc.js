@@ -61,11 +61,11 @@ module.exports = {
         },
     ],
     screener(answers) {
-        const answers = {
-            useTs: true,
-            store: 'mobx',
-            useEslint: true,
-        }
+        const {
+            useTs,
+            store,
+            useEslint,
+        } = answers;
         const include = [];
         const exclude = [];
         
