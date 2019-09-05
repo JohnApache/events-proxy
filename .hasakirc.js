@@ -91,5 +91,9 @@ module.exports = {
             exclude.push(new RegExp('mobxStore'));
             exclude.push(new RegExp('reduxStore'));
         }
+        return {
+            include,
+            exclude
+        }
     }
 }
