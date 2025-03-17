@@ -22,7 +22,7 @@
   "author": "JohnApache",
   "license": "MIT",
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.5.5"
+    "@babel/runtime-corejs3": "^7.26.10"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
